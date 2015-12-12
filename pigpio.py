@@ -575,6 +575,8 @@ _PI_BAD_ISR_INIT = -123
 PI_BAD_FOREVER = -124
 PI_BAD_FILTER = -125
 
+_PI_SOCK_ERR = -500
+
 
 # pigpio error text
 
@@ -702,7 +704,7 @@ _errors = [
     [_PI_BAD_ISR_INIT, "bad ISR initialisation"],
     [PI_BAD_FOREVER, "loop forever must be last chain command"],
     [PI_BAD_FILTER, "bad filter parameter"],
-
+    [_PI_SOCK_ERR, "can't connect to pigpiod. is pigpiod running?"],
 ]
 
 
@@ -3724,23 +3726,8 @@ class pi():
             else:
                 h = self._host
 
-            errStr = "Can't connect to pigpio on {}({})".format(
-                str(h), str(self._port))
-
-            print(
-                "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-            print(errStr)
-            print("")
-            print("Did you start the pigpio daemon? E.g. sudo pigpiod")
-            print("")
-            print("Did you specify the correct Pi host/port in the environment")
-            print("variables PIGPIO_ADDR/PIGPIO_PORT?")
-            print("E.g. export PIGPIO_ADDR=soft, export PIGPIO_PORT=8888")
-            print("")
-            print("Did you specify the correct Pi host/port in the")
-            print("pigpio.pi() function? E.g. pigpio.pi('soft', 8888))")
-            print(
-                "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+            # raise exception
+            _u2i(_PI_SOCK_ERR)
         else:
             atexit.register(self.stop)
 
